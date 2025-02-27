@@ -15,6 +15,7 @@ set(common_sources
         Process.cpp
         ProcessUtils.cpp
         Command.cpp
+        StringUtils.cpp
 
         log/LogSetup.cpp
         log/LogUtils.cpp)

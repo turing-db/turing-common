@@ -2,7 +2,6 @@
 
 #include <ranges>
 #include <spdlog/spdlog.h>
-#include <boost/process.hpp>
 
 #include "FileUtils.h"
 #include "log/LogUtils.h"
@@ -72,14 +71,8 @@ void Command::getLogs(std::string& data) const {
 }
 
 bool Command::searchCmd() {
-    const auto bpExecPath = boost::process::search_path(_cmd);
-    if (bpExecPath.empty()) {
-        return false;
-    }
-
-    _cmd = bpExecPath.string();
-
-    return true;
+    _cmd = FileUtils::findExecutableInPath(_cmd);
+    return !_cmd.empty();
 }
 
 void Command::generateCmdString(std::string& cmdStr) {

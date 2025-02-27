@@ -5,6 +5,8 @@
 #include <fstream>
 #include <sys/stat.h>
 
+#include "StringUtils.h"
+
 bool FileUtils::exists(const FileUtils::Path& path) {
     std::error_code error;
     const bool res = std::filesystem::exists(path, error);
@@ -174,7 +176,7 @@ bool FileUtils::makeExecutable(const Path& path) {
                          | std::filesystem::perms::group_exec
                          | std::filesystem::perms::others_exec;
 
-    std::filesystem::permissions(path, execPerms, std::filesystem::perm_options::add);
+    std::filesystem::permissions(path, execPerms, std::filesystem::perm_options::add, error);
     return !error;
 }
 
@@ -190,4 +192,45 @@ bool FileUtils::isOpenedDescriptor(int fd) {
     struct stat statBuf;
     const int res = fstat(fd, &statBuf);
     return (res != EBADF && res != EIO);
+}
+
+bool FileUtils::isExecutable(const Path& path) {
+    if (!isFile(path)) {
+        return false;
+    }
+
+    std::error_code error;
+    const auto perms = std::filesystem::status(path, error).permissions();
+
+    return (perms & std::filesystem::perms::owner_exec) != std::filesystem::perms::none ||
+           (perms & std::filesystem::perms::group_exec) != std::filesystem::perms::none ||
+           (perms & std::filesystem::perms::others_exec) != std::filesystem::perms::none;
+}
+
+std::string FileUtils::findExecutableInPath(std::string_view exe) {
+    if (exe.empty()) {
+        return {};
+    }
+
+    const char* pathEnv = std::getenv("PATH");
+    if (!pathEnv) {
+        return {};
+    }
+
+    const std::string_view pathView(pathEnv);
+    std::vector<std::string_view> pathElements;
+    StringUtils::splitString(pathView, ':', pathElements);
+
+    for (const auto& dir : pathElements) {
+        if (dir.empty() || dir[0] != '/') {
+            continue;
+        }
+
+        const Path execPath = Path(dir)/exe;
+        if (isExecutable(execPath)) {
+            return execPath.string();
+        }
+    }
+
+    return {};
 }

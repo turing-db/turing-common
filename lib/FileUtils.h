@@ -2,6 +2,7 @@
 
 #include <filesystem>
 #include <vector>
+#include <string_view>
 
 class FileUtils {
 public:
@@ -29,4 +30,6 @@ public:
     static bool isAbsolute(const Path& path);
     static bool isOpenedDescriptor(int fd);
     static bool isFile(const Path& path);
+    static bool isExecutable(const Path& path);
+    static std::string findExecutableInPath(std::string_view exe);
 };
