@@ -12,6 +12,10 @@ set(common_sources
         ToolInit.cpp
         ToolCommand.cpp
         ToolCommandEngine.cpp
+        Process.cpp
+        ProcessUtils.cpp
+        Command.cpp
+
         log/LogSetup.cpp
         log/LogUtils.cpp)
 
