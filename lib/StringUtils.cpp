@@ -1,8 +1,8 @@
 #include "StringUtils.h"
 
-void splitString(std::string_view str,
-                 char sep,
-                 std::vector<std::string_view>& res) {
+void StringUtils::splitString(std::string_view str,
+                              char sep,
+                              std::vector<std::string_view>& res) {
     size_t pos = 0;
 
     while (pos < str.size()) {
