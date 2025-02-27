@@ -7,7 +7,13 @@ set(common_sources
         TimerStat.cpp
         PerfStat.cpp
         FileUtils.cpp
-        Demonology.cpp)
+        Demonology.cpp
+        BannerDisplay.cpp
+        ToolInit.cpp
+        ToolCommand.cpp
+        ToolCommandEngine.cpp
+        log/LogSetup.cpp
+        log/LogUtils.cpp)
 
 add_library(turing_common_s STATIC ${common_sources})
 if (${DEBUG_BUILD})
@@ -18,4 +24,5 @@ target_include_directories(turing_common_s PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 target_link_libraries(turing_common_s PUBLIC
     spdlog
-    expected)
+    expected
+    argparse)
