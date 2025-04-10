@@ -29,7 +29,7 @@ void CanNotWrite(const std::string& path) {
 }
 
 void ExecutableNotFound(const std::string& cmd) {
-    spdlog::error("Executable {} not found", cmd);
+    spdlog::error("Executable '{}' not found", cmd);
 }
 
 void ImpossibleToRunCommand(const std::string& cmd) {
