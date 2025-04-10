@@ -9,6 +9,7 @@ void StringUtils::splitString(std::string_view str,
         const size_t delimiterPos = str.find(sep, pos);
 
         if (delimiterPos == std::string_view::npos) {
+            res.push_back(str.substr(pos));
             pos = str.size();
         } else {
             res.push_back(str.substr(pos, delimiterPos-pos));
