@@ -4,6 +4,7 @@
 #include <fcntl.h>
 #include <fstream>
 #include <sys/stat.h>
+#include <regex>
 
 #include "StringUtils.h"
 
@@ -233,4 +234,32 @@ std::string FileUtils::findExecutableInPath(std::string_view exe) {
     }
 
     return {};
+}
+
+std::string FileUtils::expandPath(const std::string& path) {
+    const std::regex envVarRegex("\\$\\{([^}]+)\\}|\\$([a-zA-Z0-9_]+)");
+
+    std::smatch match;
+    auto searchStart = path.cbegin();
+    std::string result = path;
+    while (std::regex_search(searchStart, path.cend(), match, envVarRegex)) {
+        // Get variable name, either in group 1 or in group 2
+        const auto& varName = match[1].matched ? match[1].str() : match[2].str();
+
+        // Get environment variable
+        const char* envValue = getenv(varName.c_str());
+        if (envValue) {
+            // Replace the variable with its value
+            const auto startPos = match.position(0) + (searchStart - path.cbegin());
+            result.replace(startPos, match.length(0), envValue);
+
+            // Update the search start position
+            searchStart = path.cbegin() + startPos + std::strlen(envValue);
+        } else {
+            // Variable not found, leave it unchanged
+            searchStart = path.cbegin() + match.position(0) + match.length(0);
+        }
+    }
+
+    return result;
 }
