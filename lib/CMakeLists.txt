@@ -16,6 +16,7 @@ set(common_sources
         ProcessUtils.cpp
         Command.cpp
         StringUtils.cpp
+        Profiler.cpp
 
         log/LogSetup.cpp
         log/LogUtils.cpp)
@@ -26,6 +27,8 @@ if (${DEBUG_BUILD})
 endif()
 
 target_include_directories(turing_common_s PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+
+target_compile_definitions(turing_common_s PUBLIC -DTURING_PROFILE=${TURING_PROFILE})
 
 target_link_libraries(turing_common_s PUBLIC
     spdlog
