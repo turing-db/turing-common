@@ -1,14 +1,16 @@
 #pragma once
 
-#include <boost/lexical_cast.hpp>
+#include <sstream>
 
 template <typename NumberType>
 NumberType StringToNumber(std::string_view str, bool& error) {
     try {
-        const NumberType res = boost::lexical_cast<NumberType>(str.data(), str.size());
+        NumberType res {0};
+        std::istringstream iss;
+        iss >> res;
         error = false;
         return res;
-    } catch (const boost::bad_lexical_cast& e) {
+    } catch (const std::exception& e) {
         error = true;
         return 0;
     }

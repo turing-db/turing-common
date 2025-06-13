@@ -1,9 +1,11 @@
+#include "Profiler.h"
+
 #include <mutex>
 #include <map>
 
-#include "Profiler.h"
-#include "Time.h"
-#include "spdlog/fmt/bundled/core.h"
+#include <spdlog/fmt/bundled/core.h>
+
+#include "TuringTime.h"
 
 struct ProfileData {
     Profiler::ProfileID _id;
