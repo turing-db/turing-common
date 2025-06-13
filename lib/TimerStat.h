@@ -1,7 +1,8 @@
 #pragma once
 
-#include "Time.h"
 #include <string>
+
+#include "TuringTime.h"
 
 class TimerStat {
 public:

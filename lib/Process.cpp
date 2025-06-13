@@ -8,6 +8,10 @@
 #include <fcntl.h>
 #include <sys/wait.h>
 
+#if __APPLE__
+#include <crt_externs.h>
+#endif
+
 #include <spdlog/spdlog.h>
 
 #include "ProcessUtils.h"
@@ -16,6 +20,14 @@ namespace {
 
 std::string makeEnvString(const std::string& name, const std::string& value) {
     return name + "=" + value;
+}
+
+char** getEnviron() {
+#if __APPLE__
+    return *_NSGetEnviron();
+#else
+    return environ;
+#endif
 }
 
 }
@@ -145,7 +157,10 @@ bool Process::startAsync() {
 
     // Create envp
     std::vector<char*> envp;
-    for (char** env = environ; *env != NULL; env++) {
+
+    char** currentEnv = getEnviron();
+
+    for (char** env = currentEnv; *env != NULL; env++) {
         envp.emplace_back(*env);
     }
 
@@ -154,7 +169,7 @@ bool Process::startAsync() {
     }
     envp.push_back(NULL);
 
-    const int execRes = execvpe(_cmd.c_str(), argv.data(), envp.data());
+    const int execRes = execve(_cmd.c_str(), argv.data(), envp.data());
     if (execRes < 0) {
         spdlog::error("Exec failed for command {}", _cmd);
         exit(EXIT_FAILURE);

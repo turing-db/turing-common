@@ -1,4 +1,5 @@
 #include "RWSpinLock.h"
+#include <thread>
 
 static constexpr uint32_t UNIQUE_LOCKED = 1u;
 static constexpr uint32_t READER = 2u;
@@ -6,11 +7,11 @@ static constexpr uint32_t READER = 2u;
 namespace {
 
 inline void yield() {
-    // We depend on an x86_64/x86 builtin
-    #if not defined(__x86_64__)
-    static_assert(false);
-    #endif
+    #if defined(__x86_64__)
     __builtin_ia32_pause();
+    #else
+    std::this_thread::yield();
+    #endif
 }
 
 }
