@@ -5,6 +5,7 @@
 #include <fstream>
 #include <sys/stat.h>
 #include <regex>
+#include <string.h>
 
 #include "StringUtils.h"
 
@@ -254,7 +255,7 @@ std::string FileUtils::expandPath(const std::string& path) {
             result.replace(startPos, match.length(0), envValue);
 
             // Update the search start position
-            searchStart = path.cbegin() + startPos + std::strlen(envValue);
+            searchStart = path.cbegin() + startPos + strlen(envValue);
         } else {
             // Variable not found, leave it unchanged
             searchStart = path.cbegin() + match.position(0) + match.length(0);
