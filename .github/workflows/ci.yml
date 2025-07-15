@@ -17,7 +17,7 @@ jobs:
       run: ./pull.sh
     - name: Configure cmake
       shell: bash
-      run: cd ${{ github.workspace }}/build && cmake ..
+      run: mkdir -p ${{ github.workspace }}/build && cd ${{ github.workspace }}/build && cmake ..
     - name: Build
       shell: bash
       run: cd ${{ github.workspace }}/build && make
