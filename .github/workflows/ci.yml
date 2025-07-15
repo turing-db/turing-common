@@ -13,5 +13,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    - name: pull dependencies
+      run: ./pull.sh
     - name: make
       run: make
