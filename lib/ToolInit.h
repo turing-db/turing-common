@@ -1,5 +1,4 @@
-#ifndef _BIO_TOOL_INIT_
-#define _BIO_TOOL_INIT_
+#pragma once
 
 #include <string>
 #include <memory>
@@ -44,5 +43,3 @@ private:
     void parseArguments(int argc, const char** argv);
     void setupLogger();
 };
-
-#endif

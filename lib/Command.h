@@ -1,5 +1,4 @@
-#ifndef _COMMON_COMMAND_
-#define _COMMON_COMMAND_
+#pragma once
 
 #include <string>
 #include <filesystem>
@@ -53,5 +52,3 @@ private:
     void generateCmdString(std::string& cmdStr);
     bool generateBashCmd(Process& proc);
 };
-
-#endif

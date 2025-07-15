@@ -1,5 +1,4 @@
-#ifndef _COMMON_BANNER_DISPLAY_
-#define _COMMON_BANNER_DISPLAY_
+#pragma once
 
 #include <string>
 
@@ -9,5 +8,3 @@ public:
 
     static void printBanner();
 };
-
-#endif
