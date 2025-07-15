@@ -5,6 +5,7 @@
 #endif
 
 #include <string_view>
+#include <stdint.h>
 
 class Profiler {
 public:
