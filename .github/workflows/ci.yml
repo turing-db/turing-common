@@ -16,7 +16,8 @@ jobs:
     - name: Pull submodules
       run: ./pull.sh
     - name: Configure cmake
-      run: cmake -B ${{ github.workspace }}/build
-    - name: Build
       shell: bash
       run: cd ${{ github.workspace }}/build && cmake ..
+    - name: Build
+      shell: bash
+      run: cd ${{ github.workspace }}/build && make
