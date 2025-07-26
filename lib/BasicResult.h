@@ -1,9 +1,9 @@
 #pragma once
 
-#include <expected.hpp>
+#include <expected>
 
 template <class TValue, class TError>
-using BasicResult = nonstd::expected<TValue, TError>;
+using BasicResult = std::expected<TValue, TError>;
 
 template <class TError>
-using BadResult = nonstd::unexpected_type<TError>;
+using BadResult = std::unexpected_type<TError>;

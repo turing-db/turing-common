@@ -32,5 +32,4 @@ target_compile_definitions(turing_common_s PUBLIC -DTURING_PROFILE=${TURING_PROF
 
 target_link_libraries(turing_common_s PUBLIC
     spdlog
-    expected
     argparse)
