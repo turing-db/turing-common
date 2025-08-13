@@ -1,9 +1,9 @@
 #pragma once
 
-
 #include <cstdint>
 #include <string>
 #include <vector>
+
 class Base64 {
 private:
     // Encoding table - aligned for cache efficiency
@@ -48,12 +48,11 @@ public:
     }
 
     // High-performance encoder - processes 3 bytes at a time with 64-bit operations
-    static std::string encode(const uint8_t* data, const std::size_t len) {
+    static void encode(const uint8_t* data, const std::size_t len, std::string& result) {
         if (len == 0) {
-            return "";
+            return;
         }
 
-        std::string result;
         result.reserve(encode_size(len));
 
         const uint8_t* end = data + len;
@@ -62,7 +61,7 @@ public:
         // Process 3-byte chunks using 64-bit operations
         while (data < chunk_end) {
             // Load 3 bytes into a 32-bit value (big-endian style)
-            uint32_t chunk = (static_cast<uint32_t>(data[0]) << 16) |
+            const uint32_t chunk = (static_cast<uint32_t>(data[0]) << 16) |
                            (static_cast<uint32_t>(data[1]) << 8) |
                            static_cast<uint32_t>(data[2]);
 
@@ -87,30 +86,27 @@ public:
             result += (data + 1 < end) ? encode_table[(chunk >> 6) & 0x3F] : '=';
             result += '=';
         }
-
-        return result;
     }
 
     // Convenience overload for std::vector
-    static std::string encode(const std::vector<uint8_t>& data) {
-        return encode(data.data(), data.size());
+    static void encode(const std::vector<uint8_t>& data, std::string& result) {
+        return encode(data.data(), data.size(), result);
     }
 
     // Convenience overload for string
-    static std::string encode(const std::string& data) {
-        return encode(reinterpret_cast<const uint8_t*>(data.data()), data.size());
+    static void encode(const std::string& data, std::string& result) {
+        return encode(reinterpret_cast<const uint8_t*>(data.data()), data.size(), result);
     }
 
     // High-performance decoder with validation
-    static std::vector<uint8_t> decode(const char* data, const std::size_t len) {
+    static void decode(const char* data, const std::size_t len, std::vector<uint8_t>& result) {
         if (len == 0) {
-            return {};
+            return;
         }
         if (len % 4 != 0) {
-            return {}; // Invalid base64 length
+            return; // Invalid base64 length
         }
 
-        std::vector<uint8_t> result;
         result.reserve(decode_max_size(len));
 
         const char* end = data + len;
@@ -118,31 +114,30 @@ public:
         // Process 4-character chunks
         while (data < end) {
             // Load and validate 4 characters
-            uint8_t a = decode_table[static_cast<uint8_t>(data[0])];
-            uint8_t b = decode_table[static_cast<uint8_t>(data[1])];
-            uint8_t c = decode_table[static_cast<uint8_t>(data[2])];
-            uint8_t d = decode_table[static_cast<uint8_t>(data[3])];
+            const uint8_t a = decode_table[static_cast<uint8_t>(data[0])];
+            const uint8_t b = decode_table[static_cast<uint8_t>(data[1])];
+            const uint8_t c = decode_table[static_cast<uint8_t>(data[2])];
+            const uint8_t d = decode_table[static_cast<uint8_t>(data[3])];
 
             // Check for invalid characters (255 = invalid, 254 = padding)
             if (a == 255 || b == 255) {
-                return {}; // Invalid chars in required positions
+                return; // Invalid chars in required positions
             }
             if (a == 254 || b == 254) {
-                return {}; // Padding not allowed in first 2 positions
+                return; // Padding not allowed in first 2 positions
             }
             if (c == 255 || d == 255) {
-                return {}; // Invalid chars anywhere
+                return; // Invalid chars anywhere
             }
             if (c == 254 && d != 254) {
-                return {}; // If 3rd is padding, 4th must be too
+                return; // If 3rd is padding, 4th must be too
             }
             if (d == 254 && c != 254 && data < end - 4) {
-                return {}; // Padding only allowed at very end
+                return; // Padding only allowed at very end
             }
 
-
             // Combine 4 x 6-bit values into 24-bit chunk
-            uint32_t chunk = (static_cast<uint32_t>(a) << 18) |
+            const uint32_t chunk = (static_cast<uint32_t>(a) << 18) |
                              (static_cast<uint32_t>(b) << 12) |
                              (static_cast<uint32_t>(c & 0x3F) << 6) |
                              static_cast<uint32_t>(d & 0x3F);
@@ -159,18 +154,17 @@ public:
 
             data += 4;
         }
-
-        return result;
     }
 
     // Convenience overload for std::string
-    static std::vector<uint8_t> decode(const std::string& data) {
-        return decode(data.data(), data.size());
+    static void decode(const std::string& data, std::vector<uint8_t> result) {
+        return decode(data.data(), data.size(), result);
     }
 
     // Decode to string (useful for text data)
     static std::string decode_to_string(const std::string& data) {
-        auto bytes = decode(data);
+        std::vector<uint8_t> bytes;
+        decode(data, bytes);
         return std::string(bytes.begin(), bytes.end());
     }
 
@@ -180,9 +174,9 @@ public:
             return false;
         }
 
-        int padding = 0;
+        uint8_t padding = 0;
         for (std::size_t i = 0; i < len; ++i) {
-            uint8_t c = static_cast<uint8_t>(data[i]);
+            const uint8_t c = static_cast<uint8_t>(data[i]);
             if (decode_table[c] == 255) {
                 return false;
             }
