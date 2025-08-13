@@ -143,9 +143,9 @@ public:
 
             // Combine 4 x 6-bit values into 24-bit chunk
             uint32_t chunk = (static_cast<uint32_t>(a) << 18) |
-                           (static_cast<uint32_t>(b) << 12) |
-                           (static_cast<uint32_t>(c & 0x3F) << 6) |
-                           static_cast<uint32_t>(d & 0x3F);
+                             (static_cast<uint32_t>(b) << 12) |
+                             (static_cast<uint32_t>(c & 0x3F) << 6) |
+                             static_cast<uint32_t>(d & 0x3F);
 
             // Extract bytes based on padding
             result.push_back((chunk >> 16) & 0xFF);
