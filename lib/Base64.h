@@ -157,7 +157,7 @@ public:
     }
 
     // Convenience overload for std::string
-    static void decode(const std::string& data, std::vector<uint8_t> result) {
+    static void decode(const std::string& data, std::vector<uint8_t>& result) {
         return decode(data.data(), data.size(), result);
     }
 
