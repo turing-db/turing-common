@@ -10,15 +10,15 @@
  * Can be used as a template argument (as opposed to const char*)
  */
 template <std::size_t N>
-struct StringLiteral {
-    constexpr StringLiteral(const char (&str)[N]) {
+struct EnumStringLiteral {
+    constexpr EnumStringLiteral(const char (&str)[N]) {
         std::copy(str, str + N, value);
     }
 
     char value[N] {};
 };
 
-template <auto VEnumValue, StringLiteral VStringValue>
+template <auto VEnumValue, EnumStringLiteral VStringValue>
 struct EnumStringPair {
     static constexpr auto EnumValue = VEnumValue;
     static constexpr auto StringValue = VStringValue;
