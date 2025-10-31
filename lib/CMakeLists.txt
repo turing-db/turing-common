@@ -4,6 +4,7 @@ set(common_sources
         RWSpinLock.cpp
         Panic.cpp
         TuringException.cpp
+        FatalException.cpp
         TimerStat.cpp
         PerfStat.cpp
         FileUtils.cpp
