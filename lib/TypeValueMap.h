@@ -10,8 +10,8 @@ struct TypeValueMapPair {
 
 template <typename... Types>
 struct TypeValueMap {
-    template <template <typename Key, typename Value> typename Transform>
-    inline void transform() {}
+    template <template <typename Key, typename Value> typename Transform, typename... Args>
+    inline void transform(Args&&... args) {}
 };
 
 template <typename KeyT, typename ValueT, typename... Types>
@@ -29,12 +29,12 @@ struct TypeValueMap<TypeValueMapPair<KeyT, ValueT>, Types...>
         }
     }
 
-    template <template <typename Key, typename Value> typename Transform>
-    inline void transform() {
+    template <template <typename Key, typename Value> typename Transform, typename... Args>
+    inline void transform(Args&&... args) {
         using super = TypeValueMap<Types...>;
 
-        Transform<KeyT, ValueT>{}(_value);
-        super::template transform<Transform>();
+        Transform<KeyT, ValueT>{args...}(_value);
+        super::template transform<Transform>(args...);
     }
 };
 
