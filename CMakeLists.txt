@@ -84,5 +84,9 @@ execute_process(
 # Threads
 find_package(Threads REQUIRED)
 
+# zlib
+find_package(ZLIB REQUIRED)
+
 add_subdirectory(external)
 add_subdirectory(lib)
+add_subdirectory(samples)
