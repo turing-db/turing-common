@@ -62,20 +62,21 @@ void PerfStat::reportTotalMem() {
 }
 
 PerfStat::MemInfo PerfStat::getMemInMegabytes() const {
-    std::ifstream statusFile("/proc/self/status");
-    bioassert(statusFile.is_open());
+    constexpr const char* statusFileName = "/proc/self/status";
+    std::ifstream statusFile(statusFileName);
+    bioassert(!statusFile.is_open(), "Failed to open {}", statusFileName);
 
     std::string str;
     size_t reserved = 0;
     while (statusFile >> str) {
         if (str == "VmSize:") {
             statusFile >> str;
-            bioassert(!str.empty());
+            bioassert(!str.empty(), "VmSize empty");
             const size_t memKB = std::stoull(str);
             reserved = memKB / 1024;
         } else if (str == "VmRSS:") {
             statusFile >> str;
-            bioassert(!str.empty());
+            bioassert(!str.empty(), "VmRSS empty");
             const size_t memKB = std::stoull(str);
             return {
                 .reserved = reserved,
@@ -84,6 +85,6 @@ PerfStat::MemInfo PerfStat::getMemInMegabytes() const {
         }
     }
 
-    bioassert(false);
+    bioassert(false, "Unreachable code");
     return {};
 }

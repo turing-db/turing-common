@@ -1,11 +1,20 @@
 #pragma once
 
-#ifdef TURING_ASSERT
-void __bioAssertWithLocation(const char* file, unsigned line, const char* expr, const char* msg = "");
+#include <spdlog/fmt/bundled/format.h>
 
-#define bioassert(C) ({ if (!(C)) { __bioAssertWithLocation(__FILE__, __LINE__, #C); }})
-#define msgbioassert(C, msg) ({ if (!(C)) { __bioAssertWithLocation(__FILE__, __LINE__, #C, msg); }})
-#else
-#define bioassert(C)
-#define msgbioassert(C, msg)
-#endif
+void __bioassertImpl(const char* file,
+                     unsigned line,
+                     const char* expr,
+                     std::string&& msg);
+
+template <typename... Args>
+[[noreturn]] void __bioAssertWithLocation(const char* file,
+                                          unsigned line,
+                                          const char* expr,
+                                          fmt::format_string<Args...>&& msg,
+                                          Args&&... args) {
+    __bioassertImpl(file, line, expr, fmt::format(msg, std::forward<Args>(args)...));
+    abort();
+}
+
+#define bioassert(C, msg, ...) ({ if (!(C)) { __bioAssertWithLocation(__FILE__, __LINE__, #C, msg __VA_OPT__(,) __VA_ARGS__); }})
