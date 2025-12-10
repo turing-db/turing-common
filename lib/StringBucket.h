@@ -40,7 +40,7 @@ public:
     const char* data() const { return _bucket.data(); }
 
     std::string_view alloc(std::string_view content) {
-        msgbioassert(availSpace() >= content.size(), "String does not fit in bucket");
+        bioassert(availSpace() >= content.size(), "String does not fit in bucket");
         const uint32_t offset = _charCount;
         const uint32_t count = content.size();
 
