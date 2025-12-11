@@ -2,7 +2,7 @@
 
 #include <spdlog/fmt/bundled/format.h>
 
-void __bioassertImpl(const char* file,
+void __bioAssertImpl(const char* file,
                      unsigned line,
                      const char* expr,
                      std::string&& msg);
@@ -13,7 +13,7 @@ template <typename... Args>
                                           const char* expr,
                                           fmt::format_string<Args...>&& msg,
                                           Args&&... args) {
-    __bioassertImpl(file, line, expr, fmt::format(msg, std::forward<Args>(args)...));
+    __bioAssertImpl(file, line, expr, fmt::format(msg, std::forward<Args>(args)...));
     abort();
 }
 
