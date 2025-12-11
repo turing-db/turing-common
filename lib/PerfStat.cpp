@@ -64,7 +64,7 @@ void PerfStat::reportTotalMem() {
 PerfStat::MemInfo PerfStat::getMemInMegabytes() const {
     constexpr const char* statusFileName = "/proc/self/status";
     std::ifstream statusFile(statusFileName);
-    bioassert(!statusFile.is_open(), "Failed to open {}", statusFileName);
+    bioassert(statusFile.is_open(), "Failed to open {}", statusFileName);
 
     std::string str;
     size_t reserved = 0;
