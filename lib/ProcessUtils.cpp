@@ -33,7 +33,7 @@ bool ProcessUtils::killAllChildren(pid_t pid, int signal) {
 bool ProcessUtils::getAllChildren(pid_t pid, std::vector<pid_t>& children) {
 #ifdef __APPLE__
     // macOS: Use libproc to get child processes
-    int count = proc_listchildpids(pid, nullptr, 0);
+    const int count = proc_listchildpids(pid, nullptr, 0);
     if (count < 0) {
         return false;
     }
@@ -42,12 +42,12 @@ bool ProcessUtils::getAllChildren(pid_t pid, std::vector<pid_t>& children) {
     }
 
     std::vector<pid_t> childPids(count);
-    count = proc_listchildpids(pid, childPids.data(), count * sizeof(pid_t));
-    if (count < 0) {
+    const int countBytes = proc_listchildpids(pid, childPids.data(), count * sizeof(pid_t));
+    if (countBytes < 0) {
         return false;
     }
 
-    int numChildren = count / sizeof(pid_t);
+    const int numChildren = countBytes / sizeof(pid_t);
     for (int i = 0; i < numChildren; i++) {
         getAllChildren(childPids[i], children);
         children.push_back(childPids[i]);
@@ -84,25 +84,25 @@ bool ProcessUtils::getAllChildren(pid_t pid, std::vector<pid_t>& children) {
 bool ProcessUtils::searchProcess(const std::string& exe, std::vector<pid_t>& pids) {
 #ifdef __APPLE__
     // macOS: Use libproc to list all processes and get their paths
-    int numPids = proc_listallpids(nullptr, 0);
+    const int numPids = proc_listallpids(nullptr, 0);
     if (numPids <= 0) {
         return false;
     }
 
     std::vector<pid_t> allPids(numPids);
-    numPids = proc_listallpids(allPids.data(), numPids * sizeof(pid_t));
-    if (numPids <= 0) {
+    const int numPidsActual = proc_listallpids(allPids.data(), numPids * sizeof(pid_t));
+    if (numPidsActual <= 0) {
         return false;
     }
 
     const bool isAbsolute = (exe.length() > 0 && exe[0] == '/');
     char pathBuf[PROC_PIDPATHINFO_MAXSIZE];
 
-    for (int i = 0; i < numPids; i++) {
-        pid_t pid = allPids[i];
+    for (int i = 0; i < numPidsActual; i++) {
+        const pid_t pid = allPids[i];
         if (pid == 0) continue;
 
-        int ret = proc_pidpath(pid, pathBuf, sizeof(pathBuf));
+        const int ret = proc_pidpath(pid, pathBuf, sizeof(pathBuf));
         if (ret <= 0) {
             continue;
         }
@@ -115,8 +115,8 @@ bool ProcessUtils::searchProcess(const std::string& exe, std::vector<pid_t>& pid
             }
         } else {
             // Extract filename from path
-            size_t lastSlash = procPath.rfind('/');
-            std::string procName = (lastSlash != std::string::npos)
+            const size_t lastSlash = procPath.rfind('/');
+            const std::string procName = (lastSlash != std::string::npos)
                 ? procPath.substr(lastSlash + 1)
                 : procPath;
             if (procName == exe) {
