@@ -4,6 +4,10 @@
 #include <iostream>
 #include <string>
 
+#ifdef __APPLE__
+#include <mach/mach.h>
+#endif
+
 #include "BioAssert.h"
 
 PerfStat* PerfStat::_instance = nullptr;
@@ -62,6 +66,22 @@ void PerfStat::reportTotalMem() {
 }
 
 PerfStat::MemInfo PerfStat::getMemInMegabytes() const {
+#ifdef __APPLE__
+    // macOS: use mach API to get memory info
+    mach_task_basic_info_data_t info;
+    mach_msg_type_number_t count = MACH_TASK_BASIC_INFO_COUNT;
+    kern_return_t result = task_info(mach_task_self(),
+                                     MACH_TASK_BASIC_INFO,
+                                     reinterpret_cast<task_info_t>(&info),
+                                     &count);
+    bioassert(result == KERN_SUCCESS, "Failed to get task info");
+
+    return {
+        .reserved = info.virtual_size / (1024 * 1024),
+        .rss = info.resident_size / (1024 * 1024),
+    };
+#else
+    // Linux: read from /proc/self/status
     constexpr const char* statusFileName = "/proc/self/status";
     std::ifstream statusFile(statusFileName);
     bioassert(statusFile.is_open(), "Failed to open {}", statusFileName);
@@ -87,4 +107,5 @@ PerfStat::MemInfo PerfStat::getMemInMegabytes() const {
 
     bioassert(false, "Unreachable code");
     return {};
+#endif
 }
