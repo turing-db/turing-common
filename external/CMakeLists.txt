@@ -4,7 +4,6 @@ set(RANGE_V3_EXAMPLES OFF)
 set(RANGE_V3_PERF OFF)
 
 add_subdirectory(nlohmann_json)
-add_subdirectory(crow)
 add_subdirectory(range-v3)
 add_subdirectory(argparse)
 add_subdirectory(spdlog)
