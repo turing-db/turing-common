@@ -1,5 +1,6 @@
 #include "Profiler.h"
 
+#include <algorithm>
 #include <mutex>
 #include <map>
 #include <unordered_map>
