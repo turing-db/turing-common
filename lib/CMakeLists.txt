@@ -18,6 +18,7 @@ set(common_sources
         Command.cpp
         StringUtils.cpp
         Profiler.cpp
+        MermaidLink.cpp
 
         log/LogSetup.cpp
         log/LogUtils.cpp)
@@ -34,4 +35,5 @@ target_compile_definitions(turing_common_s PUBLIC -DTURING_PROFILE=${TURING_PROF
 target_link_libraries(turing_common_s PUBLIC
     spdlog
     expected
-    argparse)
+    argparse
+    ${ZLIB_LIBRARIES})
