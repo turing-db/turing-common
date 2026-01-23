@@ -11,12 +11,12 @@
 #ifdef __APPLE__
 #include <libproc.h>
 #include <sys/proc_info.h>
-#else
-#include "StringToNumber.h"
-#include "FileUtils.h"
 #endif
 
 #include <spdlog/spdlog.h>
+
+#include "StringToNumber.h"
+#include "FileUtils.h"
 
 bool ProcessUtils::killAllChildren(pid_t pid, int signal) {
     std::vector<pid_t> children;
