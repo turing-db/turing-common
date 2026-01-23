@@ -1,13 +1,14 @@
 #include "ProcessUtils.h"
 
-#include <string>
+#include <regex>
 #include <signal.h>
 #include <sstream>
-#include <unistd.h>
+#include <string>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <unistd.h>
+
 #include <spdlog/spdlog.h>
-#include <regex>
 
 #ifdef __APPLE__
 #include <libproc.h>

@@ -57,7 +57,6 @@ private:
     static void clearImpl();
 };
 
-
 class Profile {
 public:
     Profile(std::string_view message)

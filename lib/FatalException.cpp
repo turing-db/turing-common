@@ -13,5 +13,3 @@ FatalException::FatalException(std::string&& msg)
 const char* FatalException::what() const noexcept {
     return _msg.c_str();
 }
-
-
