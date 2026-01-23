@@ -1,7 +1,7 @@
 #pragma once
 
-#include <cstdint>
-#include <cstring>
+#include <stdint.h>
+#include <string.h>
 #include <limits>
 #include <optional>
 #include <span>
