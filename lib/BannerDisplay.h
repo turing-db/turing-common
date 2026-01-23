@@ -4,7 +4,7 @@
 
 class BannerDisplay {
 public:
-    static std::string getBannerString();
+    static void getBannerString(std::string& result);
 
     static void printBanner();
 };

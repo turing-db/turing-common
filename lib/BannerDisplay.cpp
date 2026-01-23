@@ -4,13 +4,15 @@
 #include <sstream>
 #include <iostream>
 
-std::string BannerDisplay::getBannerString() {
+void BannerDisplay::getBannerString(std::string& result) {
     std::ostringstream banner;
     banner << "******* Turing Platform\n";
     banner << "    *** Copyright Turing Biosystems Ltd. All Rights Reserved.\n";
-    return banner.str();
+    result = banner.str();
 }
 
 void BannerDisplay::printBanner() {
-    std::cout << getBannerString() << '\n';
+    std::string banner;
+    getBannerString(banner);
+    std::cout << banner << '\n';
 }
