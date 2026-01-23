@@ -71,7 +71,9 @@ void Command::getLogs(std::string& data) const {
 }
 
 bool Command::searchCmd() {
-    _cmd = FileUtils::findExecutableInPath(_cmd);
+    std::string result;
+    FileUtils::findExecutableInPath(_cmd, result);
+    _cmd = result;
     return !_cmd.empty();
 }
 

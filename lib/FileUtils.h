@@ -24,13 +24,13 @@ public:
     static bool readContent(const Path& path, std::string& data);
     static bool listFiles(const Path& dir, std::vector<Path>& paths);
     static uint64_t fileSize(const Path& path);
-    static std::string getExtension(const Path& path);
-    static std::string getNameWithoutExtension(const Path& path);
+    static void getExtension(const Path& path, std::string& result);
+    static void getNameWithoutExtension(const Path& path, std::string& result);
     static bool makeExecutable(const Path& path);
     static bool isAbsolute(const Path& path);
     static bool isOpenedDescriptor(int fd);
     static bool isFile(const Path& path);
     static bool isExecutable(const Path& path);
-    static std::string findExecutableInPath(std::string_view exe);
-    static std::string expandPath(const std::string& path);
+    static void findExecutableInPath(std::string_view exe, std::string& result);
+    static void expandPath(const std::string& path, std::string& result);
 };

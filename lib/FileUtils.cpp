@@ -163,12 +163,12 @@ uint64_t FileUtils::fileSize(const Path& path) {
     return std::filesystem::file_size(path);
 }
 
-std::string FileUtils::getExtension(const Path& path) {
-    return path.extension();
+void FileUtils::getExtension(const Path& path, std::string& result) {
+    result = path.extension();
 }
 
-std::string FileUtils::getNameWithoutExtension(const Path& path) {
-    return path.stem();
+void FileUtils::getNameWithoutExtension(const Path& path, std::string& result) {
+    result = path.stem();
 }
 
 bool FileUtils::makeExecutable(const Path& path) {
@@ -209,14 +209,16 @@ bool FileUtils::isExecutable(const Path& path) {
            (perms & std::filesystem::perms::others_exec) != std::filesystem::perms::none;
 }
 
-std::string FileUtils::findExecutableInPath(std::string_view exe) {
+void FileUtils::findExecutableInPath(std::string_view exe, std::string& result) {
+    result.clear();
+
     if (exe.empty()) {
-        return {};
+        return;
     }
 
     const char* pathEnv = std::getenv("PATH");
     if (!pathEnv) {
-        return {};
+        return;
     }
 
     const std::string_view pathView(pathEnv);
@@ -230,19 +232,18 @@ std::string FileUtils::findExecutableInPath(std::string_view exe) {
 
         const Path execPath = Path(dir)/exe;
         if (isExecutable(execPath)) {
-            return execPath.string();
+            result = execPath.string();
+            return;
         }
     }
-
-    return {};
 }
 
-std::string FileUtils::expandPath(const std::string& path) {
+void FileUtils::expandPath(const std::string& path, std::string& result) {
     const std::regex envVarRegex("\\$\\{([^}]+)\\}|\\$([a-zA-Z0-9_]+)");
 
     std::smatch match;
     auto searchStart = path.cbegin();
-    std::string result = path;
+    result = path;
     while (std::regex_search(searchStart, path.cend(), match, envVarRegex)) {
         // Get variable name, either in group 1 or in group 2
         const auto& varName = match[1].matched ? match[1].str() : match[2].str();
@@ -261,6 +262,4 @@ std::string FileUtils::expandPath(const std::string& path) {
             searchStart = path.cbegin() + match.position(0) + match.length(0);
         }
     }
-
-    return result;
 }
