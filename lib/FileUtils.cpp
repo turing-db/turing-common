@@ -55,7 +55,7 @@ FileUtils::Path FileUtils::cwd() {
 }
 
 bool FileUtils::writeFile(const Path& path, const std::string& content) {
-    int fd = open(path.string().c_str(),
+    const int fd = open(path.string().c_str(),
                   O_WRONLY | O_TRUNC | O_CREAT,
                   S_IRUSR | S_IWUSR);
     if (fd < 0) {
@@ -63,7 +63,7 @@ bool FileUtils::writeFile(const Path& path, const std::string& content) {
     }
 
     const size_t contentSize = content.size();
-    ssize_t bytesWritten = write(fd, content.c_str(), contentSize);
+    const ssize_t bytesWritten = write(fd, content.c_str(), contentSize);
     if (bytesWritten < 0 || bytesWritten < (ssize_t)contentSize) {
         close (fd);
         return false;
@@ -81,14 +81,14 @@ FileUtils::Path FileUtils::abspath(const Path& relativePath) {
 }
 
 bool FileUtils::writeBinary(const Path& path, const char* data, size_t size) {
-    int fd = open(path.string().c_str(),
+    const int fd = open(path.string().c_str(),
                   O_WRONLY | O_TRUNC | O_CREAT,
                   S_IRUSR | S_IWUSR);
     if (fd < 0) {
         return false;
     }
 
-    ssize_t bytesWritten = write(fd, data, size);
+    const ssize_t bytesWritten = write(fd, data, size);
     if (bytesWritten < 0 || bytesWritten < (ssize_t)size) {
         return false;
     }
