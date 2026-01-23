@@ -1,4 +1,5 @@
 #include "RWSpinLock.h"
+
 #include <thread>
 
 static constexpr uint32_t UNIQUE_LOCKED = 1u;

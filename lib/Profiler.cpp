@@ -1,11 +1,12 @@
 #include "Profiler.h"
 
 #include <algorithm>
-#include <mutex>
 #include <map>
+#include <mutex>
 #include <unordered_map>
-#include <spdlog/fmt/bundled/core.h>
 #include <vector>
+
+#include <spdlog/fmt/bundled/core.h>
 
 #include "TuringTime.h"
 

@@ -249,7 +249,6 @@ bool Process::isRunning() {
     return _running;
 }
 
-
 int Process::getExitCode() {
     updateExitCode();
     return _exitCode;
