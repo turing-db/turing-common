@@ -35,7 +35,7 @@ public:
 
     void stop(Profiler::ProfileID id) {
         std::scoped_lock guard(_mutex);
-        auto profile = _profilers.find(id);
+        const auto profile = _profilers.find(id);
 
         if (profile == _profilers.end()) {
             return;

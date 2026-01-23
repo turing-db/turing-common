@@ -53,7 +53,7 @@ std::unique_ptr<Process> Command::runAsync() {
 }
 
 bool Command::run() {
-    auto proc = runAsync();
+    const auto proc = runAsync();
     if (!proc) {
         return false;
     }
